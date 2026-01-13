@@ -214,8 +214,7 @@ const events = [
     { value: 'archery-women', label: 'Archery (Women)' },
 ]
 
-// ---------------------------
-export function Dashboard() {
+const Dashboard: React.FC = () => {
     const [leaderboardData, setLeaderboardData] = useState<LeaderboardRow[]>([])
     const [search, setSearch] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
@@ -438,7 +437,7 @@ export function Dashboard() {
             setBronzeValue(bronzeEntry.team)
             setBronzeDisabled(true)
         }
-    }, [eventValue, rawDataFill])
+    }, [eventValue, rawDataFill, goldDisabled, bronzeDisabled, silverDisabled])
 
     useEffect(() => {
         if (!rawDataFill?.length) return
@@ -486,7 +485,7 @@ export function Dashboard() {
 
         // Remove latestCreatedAt before saving to state
         setEventsRecorded(sortedEvents.map(({ latestCreatedAt, ...rest }) => rest))
-    }, [rawDataFill])
+    }, [rawDataFill, search])
 
     // ---------------------------
     // Filter leaderboard based on search
@@ -548,16 +547,13 @@ export function Dashboard() {
             .join(' ')
 
         // Capitalize gender if it's a string
-        const formattedGender =
-            typeof gender === 'string'
-                ? gender.charAt(0).toUpperCase() + gender.slice(1)
-                : 'Unknown'
+        const formattedGender = gender
+            ? gender.charAt(0).toUpperCase() + gender.slice(1)
+            : 'Unknown';
 
-        return `${formattedName} (${formattedGender})`
+        return `${formattedName} (${formattedGender})`;
+
     }
-
-    // for search
-
     return (
         <>
             <Header>
@@ -925,26 +921,14 @@ export function Dashboard() {
                         </form>
                     </Dialog>
                 </div>
-                {/*{loading && (*/}
-                {/*  <div className='mb-2 text-sm text-gray-500'>*/}
-                {/*    Loading leaderboard...*/}
-                {/*  </div>*/}
-                {/*)}*/}
-                {/*{error && <div className='mb-2 text-sm text-red-500'>{error}</div>}*/}
+
 
                 <Tabs
                     orientation='vertical'
                     defaultValue='overview'
                     className='space-y-4'
                 >
-                    {/*<div className='w-full overflow-x-auto pb-2'>*/}
-                    {/*  <TabsList>*/}
-                    {/*    <TabsTrigger value='overview'>Overall</TabsTrigger>*/}
-                    {/*    <TabsTrigger value='analytics'>Elementary</TabsTrigger>*/}
-                    {/*    <TabsTrigger value='secondary'>Secondary</TabsTrigger>*/}
-                    {/*    <TabsTrigger value='paragames'>Paragames</TabsTrigger>*/}
-                    {/*  </TabsList>*/}
-                    {/*</div>*/}
+
 
                     {/* ===== OVERVIEW TAB ===== */}
                     <TabsContent value='overview' className='space-y-6' forceMount>
@@ -1282,3 +1266,5 @@ export function Dashboard() {
         </>
     )
 }
+export default Dashboard
+
